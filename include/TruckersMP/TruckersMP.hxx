@@ -112,6 +112,9 @@ using Placement = TruckersMP_Placement;
 /// @brief A color with red, green, blue, and alpha channels.
 using Color = TruckersMP_Color;
 
+/// @brief Axis-aligned box in the object's own space.
+using Bounds = TruckersMP_Bounds;
+
 /// @brief One mounted content package.
 /// @note An owning value copy of one TruckersMP_PackageInfo list element.
 struct PackageInfo
@@ -230,6 +233,9 @@ public:
     /// @brief Obtain trailer's angular velocity in world space, in radians per second.
     std::optional< Float3 > GetAngularVelocity() const;
 
+    /// @brief Model bounding box (meters).
+    std::optional< Bounds > GetBoundingBox() const;
+
 private:
     Session *m_session = nullptr;
     TruckersMP_Trailer_Handle m_handle{};
@@ -258,6 +264,9 @@ public:
 
     /// @brief Obtain vehicle's angular velocity in world space, in radians per second.
     std::optional< Float3 > GetAngularVelocity() const;
+
+    /// @brief Model bounding box in vehicle space (meters).
+    std::optional< Bounds > GetBoundingBox() const;
 
 private:
     Session *m_session = nullptr;
@@ -1192,6 +1201,22 @@ inline std::optional< Float3 > Trailer::GetAngularVelocity() const
     return native;
 }
 
+inline std::optional< Bounds > Trailer::GetBoundingBox() const
+{
+    if( !IsValid() ) {
+        return std::nullopt;
+    }
+    const TrailerModule &module = m_session->Trailer();
+    if( module.m_trailerTable == nullptr ) {
+        return std::nullopt;
+    }
+    Bounds native;
+    if( !module.m_trailerTable->GetBoundingBox( module.m_ctx, m_handle, &native ) ) {
+        return std::nullopt;
+    }
+    return native;
+}
+
 inline std::optional< Trailer > Vehicle::GetTrailer() const
 {
     if( !IsValid() ) {
@@ -1251,6 +1276,22 @@ inline std::optional< Float3 > Vehicle::GetAngularVelocity() const
     }
     Float3 native;
     if( !module.m_vehicleTable->GetAngularVelocity( module.m_ctx, m_handle, &native ) ) {
+        return std::nullopt;
+    }
+    return native;
+}
+
+inline std::optional< Bounds > Vehicle::GetBoundingBox() const
+{
+    if( !IsValid() ) {
+        return std::nullopt;
+    }
+    const VehicleModule &module = m_session->Vehicle();
+    if( module.m_vehicleTable == nullptr ) {
+        return std::nullopt;
+    }
+    Bounds native;
+    if( !module.m_vehicleTable->GetBoundingBox( module.m_ctx, m_handle, &native ) ) {
         return std::nullopt;
     }
     return native;

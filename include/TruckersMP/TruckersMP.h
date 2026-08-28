@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-#define TRUCKERSMP_SDK_VERSION 0x01000000u /* 1.0.0 */
+#define TRUCKERSMP_SDK_VERSION 0x01000100u /* 1.1.0 */
 
 /* TruckersMP_EResult is defined in TruckersMP_Base.h; its values follow. */
 enum
@@ -99,6 +99,13 @@ typedef struct TruckersMP_Color
     uint8_t a;
 } TruckersMP_Color;
 TRUCKERSMP_ASSERT_SIZE( TruckersMP_Color, 4 );
+
+typedef struct TruckersMP_Bounds
+{
+    TruckersMP_Float3 min;
+    TruckersMP_Float3 max;
+} TruckersMP_Bounds;
+TRUCKERSMP_ASSERT_SIZE( TruckersMP_Bounds, 24 );
 
 typedef struct TruckersMP_PackageInfo
 {
@@ -312,6 +319,7 @@ typedef struct TruckersMP_Trailer
     bool( TMP_API *GetPlacement )( TruckersMP_PluginContext *ctx, TruckersMP_Trailer_Handle self, TruckersMP_Placement *out );
     bool( TMP_API *GetLinearVelocity )( TruckersMP_PluginContext *ctx, TruckersMP_Trailer_Handle self, TruckersMP_Float3 *out );
     bool( TMP_API *GetAngularVelocity )( TruckersMP_PluginContext *ctx, TruckersMP_Trailer_Handle self, TruckersMP_Float3 *out );
+    bool( TMP_API *GetBoundingBox )( TruckersMP_PluginContext *ctx, TruckersMP_Trailer_Handle self, TruckersMP_Bounds *out );
 } TruckersMP_Trailer;
 
 #define TRUCKERSMP_EVT_TRAILER_SPAWNED 0xce6ca9d0cc8edb21ull
@@ -351,6 +359,7 @@ typedef struct TruckersMP_Vehicle
     bool( TMP_API *GetPlacement )( TruckersMP_PluginContext *ctx, TruckersMP_Vehicle_Handle self, TruckersMP_Placement *out );
     bool( TMP_API *GetLinearVelocity )( TruckersMP_PluginContext *ctx, TruckersMP_Vehicle_Handle self, TruckersMP_Float3 *out );
     bool( TMP_API *GetAngularVelocity )( TruckersMP_PluginContext *ctx, TruckersMP_Vehicle_Handle self, TruckersMP_Float3 *out );
+    bool( TMP_API *GetBoundingBox )( TruckersMP_PluginContext *ctx, TruckersMP_Vehicle_Handle self, TruckersMP_Bounds *out );
 } TruckersMP_Vehicle;
 
 #define TRUCKERSMP_EVT_VEHICLE_SPAWNED 0x2e257d71ce258fe1ull
